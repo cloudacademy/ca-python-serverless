@@ -14,7 +14,7 @@ Resources:
               Action:
                 - 'dynamodb:GetItem'
                 - 'dynamodb:Query'
-              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+              Resource: arn:aws:dynamodb:us-east-1:[ACCOUNT_ID]:table/TodoList
       Description: Get
       Environment:
         Variables:
@@ -38,7 +38,7 @@ Resources:
               Action:
                 - 'dynamodb:GetItem'
                 - 'dynamodb:PutItem'
-              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+              Resource: arn:aws:dynamodb:us-east-1:[ACCOUNT_ID]:table/TodoList
       Description: POST
       Environment:
         Variables:
@@ -62,7 +62,7 @@ Resources:
               Action:
                 - 'dynamodb:GetItem'
                 - 'dynamodb:UpdateItem'
-              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+              Resource: arn:aws:dynamodb:us-east-1:[ACCOUNT_ID]:table/TodoList
       Description: PUT
       Environment:
         Variables:
@@ -86,7 +86,7 @@ Resources:
               Action:
                 - 'dynamodb:GetItem'
                 - 'dynamodb:DeleteItem'
-              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+              Resource: arn:aws:dynamodb:us-east-1:[ACCOUNT_ID]:table/TodoList
       Description: DELETE
       Environment:
         Variables:
