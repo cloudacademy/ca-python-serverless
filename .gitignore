@@ -107,3 +107,4 @@ packaged.yaml
 .vscode/*
 venv/*
 .DS_Store
+s3_policy.json
