@@ -20,10 +20,12 @@ def handler(event, context):
     # Never trust a userID supplied by a user for security reasons.
     # Assume all users are malicious haxors looking to 'pwn all ur nodes'
     user_id = parse_username_from_claims(event)
-    todo_id = event.get('queryStringParameters', {}).get('id', None)
-
-    if todo_id is None:
-        return respond('Missing the todo item id', None)
+    todo_id = None
+    
+    try:
+        event['queryStringParameters']['id']
+    except:
+        return respond('Missing the todo item id', None)        
 
     delete(client, user_id, todo_id, table_name)
 
