@@ -1,0 +1,148 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+  TodoGet:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: api.get_handler
+      Runtime: python3.6
+      CodeUri: ./todo
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:GetItem'
+                - 'dynamodb:Query'
+              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+      Description: Get
+      Environment:
+        Variables:
+          TODO_TABLE: TodoList
+      Events:
+        ApiTodoListAPI:
+          Type: Api
+          Properties:
+            Path: '/todo'
+            Method: GET
+  TodoCreate:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: api.create_handler
+      Runtime: python3.6
+      CodeUri: ./todo
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:GetItem'
+                - 'dynamodb:PutItem'
+              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+      Description: POST
+      Environment:
+        Variables:
+          TODO_TABLE: TodoList
+      Events:
+        ApiTodoListAPI:
+          Type: Api
+          Properties:
+            Path: '/todo'
+            Method: POST
+  TodoUpdate:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: api.update_handler
+      Runtime: python3.6
+      CodeUri: ./todo
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:GetItem'
+                - 'dynamodb:UpdateItem'
+              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+      Description: PUT
+      Environment:
+        Variables:
+          TODO_TABLE: TodoList
+      Events:
+        ApiTodoListAPI:
+          Type: Api
+          Properties:
+            Path: '/todo'
+            Method: PUT
+  TodoDelete:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: api.delete_handler
+      Runtime: python3.6
+      CodeUri: ./todo
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:GetItem'
+                - 'dynamodb:DeleteItem'
+              Resource: arn:aws:dynamodb:us-east-1:425607006828:table/TodoList
+      Description: DELETE
+      Environment:
+        Variables:
+          TODO_TABLE: TodoList
+      Events:
+        ApiTodoListAPI:
+          Type: Api
+          Properties:
+            Path: '/todo'
+            Method: DELETE
+  # TodoDB:
+  #   Type: 'AWS::DynamoDB::Table'
+  #   Properties:
+  #     AttributeDefinitions:
+  #       - AttributeName: userId
+  #         AttributeType: S
+  #       - AttributeName: todoId
+  #         AttributeType: S
+  #     KeySchema:
+  #       - AttributeName: userId
+  #         KeyType: HASH
+  #       - AttributeName: todoId
+  #         KeyType: RANGE
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 5
+  #       WriteCapacityUnits: 5
+  #     StreamSpecification:
+  #       StreamViewType: NEW_AND_OLD_IMAGES
+  # CognitoUserIdentity:
+  #   Type: 'AWS::Cognito::IdentityPool'
+  #   Properties:
+  #     AllowUnauthenticatedIdentities: true
+  # CognitoUserIdentityCognitoUnauthRole:
+  #   Type: 'AWS::IAM::Role'
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Federated: cognito-identity.amazonaws.com
+  #           Action: 'sts:AssumeRoleWithWebIdentity'
+  #           Condition:
+  #             StringEquals:
+  #               'cognito-identity.amazonaws.com:aud': Ref! CognitoUserIdentity
+  #             'ForAnyValue:StringLike':
+  #               'cognito-identity.amazonaws.com:amr': unauthenticated
+  # CognitoUserIdentityCognitoUnauthPolicy:
+  #   Type: 'AWS::IAM::Policy'
+  #   Properties:
+  #     PolicyName: cognito_unauth_policy
+  #     PolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Effect: Allow
+  #           Action: 'execute-api:Invoke'
+  #           Resource: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*
+  #     Roles:
+  #       - !Ref CognitoUserIdentityCognitoUnauthRole

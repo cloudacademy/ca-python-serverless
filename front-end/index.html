@@ -1,0 +1,105 @@
+<!doctype html>
+<html data-framework="vue">
+
+<head>
+	<meta charset="utf-8">
+	<title>TODO List</title>
+	<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+	<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+	<section class="login" v-show="show">
+		<header class="header">
+			<h1>login</h1>
+			<ul class="todo-list">
+				<li><input class="new-todo" autofocus autocomplete="off" placeholder="Email address" v-model="username"></li>
+				<li><input class="new-todo" type="password" placeholder="Password" v-model="password"></li>
+				<li><input class="new-todo" style="background: rgba(82, 64, 64, 0.31);" type="button" value="Submit" v-on:click="login()"></li>
+			</ul>
+			<p class="subtitle fancy"><span>Don't already have an account?</span></p>
+
+		</header>
+	</section>
+	<section class="register" v-show="show">
+		<header class="header">
+			<h1>register</h1>
+			<ul class="todo-list">
+				<li><input class="new-todo" autofocus autocomplete="off" placeholder="Email address" v-model="username"></li>
+				<li><input class="new-todo" type="password" placeholder="Password" v-model="password"></li>
+				<li><input class="new-todo" style="background: rgba(82, 64, 64, 0.31);" type="button" value="Submit" v-on:click="register()"></li>
+			</ul>
+
+		</header>
+	</section>
+	<section class="update" v-show="show">
+		<header class="header">
+			<h1>verify</h1>
+			<span>Check your email for a verification code.</span>
+			<ul class="todo-list">
+				<li><input class="new-todo" autofocus autocomplete="off" placeholder="Email address" v-model="username"></li>
+				<li><input class="new-todo" placeholder="Verification code" v-model="code"></li>
+				<li><input class="new-todo" style="background: rgba(82, 64, 64, 0.31);" type="button" value="Submit" v-on:click="verify()"></li>
+			</ul>
+
+		</header>
+	</section>
+	<section class="todoapp" v-cloak v-show="show">
+		<span><a href="#" @click="signOut()">Logout</a></span>
+		<header class="header">
+			<h1>todo items</h1>
+			<input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
+		</header>
+		<section class="main" v-show="todos.length">
+			<input class="toggle-all" type="checkbox" v-model="allDone">
+			<ul class="todo-list">
+				<li class="todo" v-for="todo in filteredTodos" :class="{completed: todo.completed, editing: todo == editedTodo}">
+					<div class="view">
+						<input class="toggle" type="checkbox" v-model="todo.completed" v-on:change="complete(todo)">
+						<label @dblclick="editTodo(todo)">{{todo.item}}</label>
+						<button class="destroy" @click="removeTodo(todo)"></button>
+					</div>
+					<input class="edit" type="text" v-model="todo.item" v-todo-focus="todo == editedTodo" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)"
+					 @keyup.esc="cancelEdit(todo)">
+				</li>
+			</ul>
+		</section>
+		<footer class="footer" v-show="todos.length">
+			<span class="todo-count">
+					<strong v-text="remaining"></strong> {{pluralize('item', remaining)}} left
+				</span>
+			<ul class="filters">
+				<li><a href="#/all" :class="{selected: visibility == 'all'}">All</a></li>
+				<li><a href="#/active" :class="{selected: visibility == 'active'}">Active</a></li>
+				<li><a href="#/completed" :class="{selected: visibility == 'completed'}">Completed</a></li>
+			</ul>
+			<button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
+					Clear completed
+				</button>
+		</footer>
+	</section>
+	<footer class="info">
+		<p>Double-click to edit a todo</p>
+		<p>Based on the Vue.js MVC app Written by <a href="http://evanyou.me">Evan You</a></p>
+		<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+	</footer>
+	
+	<script src="node_modules/director/build/director.js"></script>
+	<script src="node_modules/vue/dist/vue.js"></script>
+
+	<script src="js/aws-cognito-sdk.min.js"></script>
+	<script src="js/amazon-cognito-identity.min.js"></script>
+
+	<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="js/config.js"></script>
+	<script src="js/store.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/routes.js"></script>
+</body>
+
+</html>
