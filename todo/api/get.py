@@ -26,7 +26,7 @@ def handler(event, context):
     todo_id = None
     
     try:
-        event['queryStringParameters']['id']
+        todo_id = event['queryStringParameters']['id']
     except:
         pass
 
