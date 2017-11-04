@@ -3,6 +3,10 @@
 REGION=us-west-2
 STACK_NAME=TodoServerlessAPI
 BUCKET=`aws s3api list-buckets --output json --query Buckets[*].Name --output text | tr '\t' '\n' | grep sambucket`
+ACCOUNT_ID=`aws sts get-caller-identity --output text --query 'Account'`
+
+# Set the account Id in the SAM template
+sed -i "s/\[ACCOUNT_ID\]/$ACCOUNT_ID/g" template.yaml
 
 # Package SAM template
 # Takes the local code, bundles it and then uploads it to S3
