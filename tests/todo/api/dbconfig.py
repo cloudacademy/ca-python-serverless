@@ -7,8 +7,8 @@ from moto import mock_dynamodb2
 def init():
     ''' Creates the databases and returns the client and the table 
     '''
-    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    os.environ['AWS_DEFAULT_REGION'] = 'us-west-2'
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-2')
     table_name = os.getenv('TODO_TABLE', 'todo_test')
 
     table = dynamodb.create_table(
