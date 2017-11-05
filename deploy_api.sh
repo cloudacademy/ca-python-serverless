@@ -5,7 +5,7 @@ STACK_NAME=TodoServerlessAPI
 BUCKET=`aws s3api list-buckets --output json --query Buckets[*].Name --output text | tr '\t' '\n' | grep sambucket`
 EXECUTION_ROLE=`aws iam list-roles --query Roles[*].Arn --output text | tr '\t' '\n' | grep SamExecutionRole`
 
-# Set the account Id and execution role in the SAM template
+# Set the execution role in the SAM template
 sed -i "s#\[EXECUTION_ROLE\]#$EXECUTION_ROLE#g" template.yaml
 
 # Package SAM template
