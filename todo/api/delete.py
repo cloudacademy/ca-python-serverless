@@ -12,7 +12,7 @@ def handler(event, context):
     table_name = os.getenv('TODO_TABLE',
                            'todo_test')  # Table from env vars or todo_test
     region_name = os.getenv('AWS_REGION',
-                            'us-east-1')  # Region from env vars or east 1
+                            'us-west-2')  # Region from env vars or east 1
     client = boto3.resource('dynamodb', region_name=region_name)
     # User id is set by API Gateway once a user is authenticated.
     # The user can't fake this setting...in theory.
@@ -23,7 +23,7 @@ def handler(event, context):
     todo_id = None
     
     try:
-        event['queryStringParameters']['id']
+        todo_id = event['queryStringParameters']['id']
     except:
         return respond('Missing the todo item id', None)        
 

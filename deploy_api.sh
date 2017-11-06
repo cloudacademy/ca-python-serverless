@@ -1,28 +1,12 @@
 #!/bin/bash
 
-BUCKET=bucket
-REGION=us-east-1
-ACCOUNT_ID=account
+REGION=us-west-2
 STACK_NAME=TodoServerlessAPI
+BUCKET=`aws s3api list-buckets --output json --query Buckets[*].Name --output text | tr '\t' '\n' | grep sambucket`
+EXECUTION_ROLE=`aws iam list-roles --query Roles[*].Arn --output text | tr '\t' '\n' | grep SamExecutionRole`
 
-aws s3 mb s3://$BUCKET --region $REGION
-cat > ./s3_policy.json <<EOM
-{
-    "Version": "2012-10-17",
-    "Id": "123",
-    "Statement": [
-      {
-        "Sid": "",
-        "Effect": "Allow",
-        "Principal": "*",
-        "Action": "s3:*",
-        "Resource": "arn:aws:s3:::$BUCKET/*"
-      }
-    ]
- }
-EOM
-
-aws s3api put-bucket-policy --bucket $BUCKET --policy file://s3_policy.json
+# Set the execution role in the SAM template
+sed -i "s#\[EXECUTION_ROLE\]#$EXECUTION_ROLE#g" template.yaml
 
 # Package SAM template
 # Takes the local code, bundles it and then uploads it to S3

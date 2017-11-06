@@ -65,10 +65,8 @@ class TestGetAPI(unittest.TestCase):
                          ['completed', 'item'])
 
         event = {
-            'params': {
-                'querystring': {
-                    'id': created['todoId']
-                }
+            'queryStringParameters': {
+                'id': created['todoId']
             },
             'requestContext': {
                 'authorizer': {

@@ -7,14 +7,7 @@ Resources:
       Handler: api.get_handler
       Runtime: python3.6
       CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:Query'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Role: [EXECUTION_ROLE]
       Description: Get
       Environment:
         Variables:
@@ -31,14 +24,7 @@ Resources:
       Handler: api.create_handler
       Runtime: python3.6
       CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:PutItem'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Role: [EXECUTION_ROLE]
       Description: POST
       Environment:
         Variables:
@@ -55,14 +41,7 @@ Resources:
       Handler: api.update_handler
       Runtime: python3.6
       CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:UpdateItem'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Role: [EXECUTION_ROLE]
       Description: PUT
       Environment:
         Variables:
@@ -79,14 +58,7 @@ Resources:
       Handler: api.delete_handler
       Runtime: python3.6
       CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:DeleteItem'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Role: [EXECUTION_ROLE]
       Description: DELETE
       Environment:
         Variables:
