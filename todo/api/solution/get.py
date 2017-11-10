@@ -45,7 +45,7 @@ def get_one(client, user_id, todo_id, table_name):
         table_name is the name of the dynamodb table where records are stored
     '''
     table = client.Table(table_name)
-    result = {} # Implement how to get the result
+    result = table.get_item(Key={'userId': user_id, 'todoId': todo_id})
     return result['Item'] if 'Item' in result else {}
 
 
