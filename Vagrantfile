@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    add-apt-repository ppa:jonathonf/python-3.6 --yes
+    add-apt-repository ppa:deadsnakes/ppa --yes
     apt-get update
     apt-get install -y python3.6 python3.6-dev libssl-dev 
     apt-get install -y python3-pip virtualenv zip
