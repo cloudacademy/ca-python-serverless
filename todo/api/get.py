@@ -15,7 +15,7 @@ def handler(event, context):
     table_name = os.getenv('TODO_TABLE',
                            'todo_test')  # Table from env vars or todo_test
     region_name = os.getenv('AWS_REGION',
-                            'us-east-1')  # Region from env vars or east 1
+                            'us-west-2')  # Region from env vars or east 1
     client = boto3.resource('dynamodb', region_name=region_name)
     # User id is set by API Gateway once a user is authenticated.
     # The user can't fake this setting...in theory.
@@ -26,7 +26,7 @@ def handler(event, context):
     todo_id = None
     
     try:
-        event['queryStringParameters']['id']
+        todo_id = event['queryStringParameters']['id']
     except:
         pass
 
@@ -45,7 +45,7 @@ def get_one(client, user_id, todo_id, table_name):
         table_name is the name of the dynamodb table where records are stored
     '''
     table = client.Table(table_name)
-    result = table.get_item(Key={'userId': user_id, 'todoId': todo_id})
+    result = {} # Implement how to get the result
     return result['Item'] if 'Item' in result else {}
 
 
