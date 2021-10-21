@@ -181,7 +181,11 @@
 					that.todos = res;
 				}, function (e) {
 					console.error(e);
-					alert(e);					
+					todoStorage.fetch(applicationConfigSettings.appUrl, applicationConfigSettings.token, function (res) {
+						that.todos = res;
+					}, function (e) {
+						console.error(e);			
+					});				
 				});
 
 			},
