@@ -5,7 +5,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: api.get_handler
-      Runtime: python3.6
+      Runtime: python3.9
       CodeUri: ./todo
       Role: [EXECUTION_ROLE]
       Description: Get
@@ -22,7 +22,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: api.create_handler
-      Runtime: python3.6
+      Runtime: python3.9
       CodeUri: ./todo
       Role: [EXECUTION_ROLE]
       Description: POST
@@ -39,7 +39,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: api.update_handler
-      Runtime: python3.6
+      Runtime: python3.9
       CodeUri: ./todo
       Role: [EXECUTION_ROLE]
       Description: PUT
@@ -56,7 +56,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: api.delete_handler
-      Runtime: python3.6
+      Runtime: python3.9
       CodeUri: ./todo
       Role: [EXECUTION_ROLE]
       Description: DELETE
