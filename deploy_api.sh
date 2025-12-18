@@ -1,11 +1,10 @@
 #!/bin/bash
 
 BUCKET=bucket
-REGION=us-east-1
+REGION=us-west-2
 ACCOUNT_ID=account
 STACK_NAME=TodoServerlessAPI
 
-aws s3 mb s3://$BUCKET --region $REGION
 cat > ./s3_policy.json <<EOM
 {
     "Version": "2012-10-17",
@@ -21,8 +20,6 @@ cat > ./s3_policy.json <<EOM
     ]
  }
 EOM
-
-aws s3api put-bucket-policy --bucket $BUCKET --policy file://s3_policy.json
 
 # Package SAM template
 # Takes the local code, bundles it and then uploads it to S3

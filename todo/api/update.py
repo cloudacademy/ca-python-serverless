@@ -1,74 +1,67 @@
+import boto3
 import os
 import json
-import uuid
-import datetime
-import boto3
 from .helper import respond, parse_username_from_claims
 
+def update(client, user_id, data, table_name):
+    table = client.Table(table_name)
+    # Update the item
+    table.update_item(
+        Key={'userId': user_id, 'todoId': data['todoId']},
+        UpdateExpression='SET #item_text = :item_text, #completed = :completed',
+        ExpressionAttributeNames={
+            '#item_text': 'item',
+            '#completed': 'completed'
+        },
+        ExpressionAttributeValues={
+            ':item_text': data['item'],
+            ':completed': data['completed']
+        }
+    )
+    # Fetch the updated item to return it
+    response = table.get_item(Key={'userId': user_id, 'todoId': data['todoId']})
+    return response.get('Item', {})
 
 def handler(event, context):
-    data = None
-
-    try:
-        data = json.loads(event['body'])
-    except Exception as ex:
-        return respond(ex.args[0], None)  # Bail out and return an error
+    table_name = os.getenv('TODO_TABLE', 'todo_test')
+    client = boto3.resource('dynamodb')
     
-    table_name = os.getenv('TODO_TABLE',
-                           'todo_test')  # Table from env vars or todo_test
-    region_name = os.getenv('AWS_REGION',
-                            'us-east-1')  # Region from env vars or east 1
-    client = boto3.resource('dynamodb', region_name=region_name)
-    # User id is set by API Gateway once a user is authenticated.
-    # The user can't fake this setting...in theory.
-    # Meaning this should be the actual logged in user.
-    # Never trust a userID supplied by a user for security reasons.
-    # Assume all users are malicious haxors looking to 'pwn all ur nodes'
     user_id = parse_username_from_claims(event)
-    result = update(client, user_id, data, table_name)
+    todo_id = None
+    data = {}
 
-    return respond(None, result)
+    # Parse Body immediately (ID might be here)
+    if event.get('body'):
+        try:
+            data = json.loads(event['body'])
+        except:
+            pass
 
+    # EXTRACTION
+    if event:
+        qs = event.get('queryStringParameters')
+        if qs and 'id' in qs:
+            todo_id = qs['id']
+        
+        if not todo_id:
+            pp = event.get('pathParameters')
+            if pp and 'id' in pp:
+                todo_id = pp['id']
 
-def update(client, user_id, data, table_name):
-    ''' client is the dynamodb client
-        user id is the id for the user that owns the record to update
-        data is a dict for properties to store in dynamodb.
-        table_name is the name of the dynamodb table where records are stored
-    '''
+        if not todo_id:
+            try:
+                todo_id = event['params']['querystring']['id']
+            except (KeyError, TypeError):
+                pass
+        
+        # Check JSON Body
+        if not todo_id:
+            todo_id = data.get('id') or data.get('todoId')
+
+    if todo_id:
+        # Ensure todoId is in the data object passed to update()
+        data['todoId'] = todo_id
+        result = update(client, user_id, data, table_name)
+        return respond(None, result)
     
-    if 'item' not in data or 'completed' not in data:
-        raise ValueError(
-            'Cannot find any values to set. Expecting item or data.')
-
-    if 'todoId' not in data:
-        raise ValueError('You must set the todoId in order to update an item.')
-
-    
-    ex_attr_name = {}
-    ex_attr_value = {}
-    update_exp_lst = []
-
-    if 'item' in data:
-        ex_attr_name['#item'] = 'item'
-        ex_attr_value[':i'] = data['item']
-        update_exp_lst.append('#item = :i')
-
-    if 'completed' in data:
-        ex_attr_name['#completed'] = 'completed'
-        ex_attr_value[':c'] = data['completed']
-        update_exp_lst.append('#completed = :c')
-
-    table = client.Table(table_name)
-
-    result = table.update_item(
-        ReturnValues='UPDATED_NEW',
-        ExpressionAttributeNames=ex_attr_name,
-        ExpressionAttributeValues=ex_attr_value,
-        Key={
-            'userId': user_id,
-            'todoId': data['todoId'],
-        },
-        UpdateExpression='SET {}'.format(', '.join(update_exp_lst)))
-
-    return result.get('Attributes', {})
+    return respond(None, {})

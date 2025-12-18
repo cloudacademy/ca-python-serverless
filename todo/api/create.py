@@ -20,7 +20,7 @@ def handler(event, context):
     table_name = os.getenv('TODO_TABLE',
                            'todo_test')  # Table from env vars or todo_test
     region_name = os.getenv('AWS_REGION',
-                            'us-east-1')  # Region from env vars or east 1
+                            'us-west-2')  # Region from env vars or east 1
     client = boto3.resource('dynamodb', region_name=region_name)
     # User id is set by API Gateway once a user is authenticated.
     # The user can't fake this setting...in theory.
@@ -49,7 +49,7 @@ def create(client, user_id, data, table_name, whitelist):
 
     whitelisted_data['userId'] = user_id
     whitelisted_data['todoId'] = str(uuid.uuid4())
-    whitelisted_data['created'] = str(datetime.datetime.utcnow())
+    whitelisted_data['created'] = str(datetime.datetime.now(datetime.UTC))
 
     # Some people like to create items they've already completed
     # It's a way to show what they've already accomplished.

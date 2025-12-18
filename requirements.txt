@@ -1,0 +1,4 @@
+boto3
+moto>=5.0.0
+mock
+flask

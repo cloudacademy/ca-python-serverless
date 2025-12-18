@@ -6,7 +6,7 @@ import os
 import uuid
 import json
 from os.path import dirname, join
-from moto import mock_dynamodb2
+from moto import mock_aws
 
 from todo.api.create import create
 from todo.api.update import update, handler
@@ -15,7 +15,7 @@ from dbconfig import init
 
 
 class TestUpdateAPI(unittest.TestCase):
-    @mock_dynamodb2
+    @mock_aws
     def test_update_function(self):
         client, table = init()
         item = {'item': 'I need to finish this test!', 'completed': True}
@@ -31,7 +31,7 @@ class TestUpdateAPI(unittest.TestCase):
         assert not todo_from_get['completed']
         assert todo_from_get['item'] == 'Make all the tests!'
 
-    @mock_dynamodb2
+    @mock_aws
     def test_update_handler(self):
         client, table = init()
 

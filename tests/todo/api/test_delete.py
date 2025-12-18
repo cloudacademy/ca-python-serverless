@@ -6,7 +6,7 @@ import os
 import uuid
 import json
 from os.path import dirname, join
-from moto import mock_dynamodb2
+from moto import mock_aws
 
 from todo.api.create import create
 from todo.api.delete import delete, handler
@@ -15,7 +15,7 @@ from dbconfig import init
 
 
 class TestUpdateAPI(unittest.TestCase):
-    @mock_dynamodb2
+    @mock_aws
     def test_delete_function(self):
         client, table = init()
         item = {'item': 'I need to finish this test!', 'completed': True}
@@ -27,7 +27,7 @@ class TestUpdateAPI(unittest.TestCase):
         # Verify it's an empty dict
         assert not todo_from_get
 
-    @mock_dynamodb2
+    @mock_aws
     def test_delete_handler(self):
         client, table = init()
         item = {'item': 'I need to finish this test!', 'completed': True}

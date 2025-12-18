@@ -1,21 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+  Simple Todo List API
+
 Resources:
   TodoGet:
     Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: api.get_handler
-      Runtime: python3.6
-      CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:Query'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
-      Description: Get
+      Handler: todo.api.get.handler
+      Runtime: python3.12
+      CodeUri: .
+      Description: GET
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/SamExecutionRole
       Environment:
         Variables:
           TODO_TABLE: TodoList
@@ -23,23 +19,17 @@ Resources:
         ApiTodoListAPI:
           Type: Api
           Properties:
-            Path: '/todo'
+            Path: /todo
             Method: GET
+
   TodoCreate:
     Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: api.create_handler
-      Runtime: python3.6
-      CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:PutItem'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Handler: todo.api.create.handler
+      Runtime: python3.12
+      CodeUri: .
       Description: POST
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/SamExecutionRole
       Environment:
         Variables:
           TODO_TABLE: TodoList
@@ -47,23 +37,17 @@ Resources:
         ApiTodoListAPI:
           Type: Api
           Properties:
-            Path: '/todo'
+            Path: /todo
             Method: POST
+
   TodoUpdate:
     Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: api.update_handler
-      Runtime: python3.6
-      CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:UpdateItem'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Handler: todo.api.update.handler
+      Runtime: python3.12
+      CodeUri: .
       Description: PUT
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/SamExecutionRole
       Environment:
         Variables:
           TODO_TABLE: TodoList
@@ -71,23 +55,17 @@ Resources:
         ApiTodoListAPI:
           Type: Api
           Properties:
-            Path: '/todo'
+            Path: /todo
             Method: PUT
+
   TodoDelete:
     Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: api.delete_handler
-      Runtime: python3.6
-      CodeUri: ./todo
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'dynamodb:GetItem'
-                - 'dynamodb:DeleteItem'
-              Resource: arn:aws:dynamodb:[REGION]:[ACCOUNT_ID]:table/TodoList
+      Handler: todo.api.delete.handler
+      Runtime: python3.12
+      CodeUri: .
       Description: DELETE
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/SamExecutionRole
       Environment:
         Variables:
           TODO_TABLE: TodoList
@@ -95,6 +73,5 @@ Resources:
         ApiTodoListAPI:
           Type: Api
           Properties:
-            Path: '/todo'
+            Path: /todo
             Method: DELETE
- 

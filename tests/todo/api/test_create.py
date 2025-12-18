@@ -6,14 +6,14 @@ import os
 import uuid
 import json
 from os.path import dirname, join
-from moto import mock_dynamodb2
+from moto import mock_aws
 
 from todo.api.create import create, handler
 from dbconfig import init
 
 
 class TestCreateAPI(unittest.TestCase):
-    @mock_dynamodb2
+    @mock_aws
     def test_create_function(self):
         client, table = init()
         item = {
@@ -36,14 +36,14 @@ class TestCreateAPI(unittest.TestCase):
         # Verify that the fake attribute is removed by the whitelist
         assert 'fake' not in results
 
-    @mock_dynamodb2
+    @mock_aws
     def test_create_function_error(self):
         client, table = init()
         # Verify todo items with no item raise an error
         with self.assertRaises(ValueError):
             create(client, '1', {}, table.table_name, ['completed', 'item'])
 
-    @mock_dynamodb2
+    @mock_aws
     def test_create_handler(self):
         client, table = init()
 

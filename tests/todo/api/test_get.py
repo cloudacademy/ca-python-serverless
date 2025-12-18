@@ -6,7 +6,7 @@ import os
 import uuid
 import json
 from os.path import dirname, join
-from moto import mock_dynamodb2
+from moto import mock_aws
 
 from todo.api.create import create
 from todo.api.get import get_all, get_one, handler
@@ -14,7 +14,7 @@ from dbconfig import init
 
 
 class TestGetAPI(unittest.TestCase):
-    @mock_dynamodb2
+    @mock_aws
     def test_get_one_function(self):
         client, table = init()
         item = {'item': 'I need to finish this test!', 'completed': True}
@@ -32,7 +32,7 @@ class TestGetAPI(unittest.TestCase):
         assert todo_from_get['completed'] == todo['completed']
         assert todo_from_get['userId'] == todo['userId']
 
-    @mock_dynamodb2
+    @mock_aws
     def test_get_all_function(self):
         client, table = init()
         items = [{
@@ -56,7 +56,7 @@ class TestGetAPI(unittest.TestCase):
         # Verify items with content A or B are returned.
         assert all([i['item'] in ['A', 'B'] for i in todo_items])
 
-    @mock_dynamodb2
+    @mock_aws
     def test_get_handler_one(self):
         client, table = init()
 
@@ -95,7 +95,7 @@ class TestGetAPI(unittest.TestCase):
         assert body['item'] == created['item']
         assert body['completed']
 
-    @mock_dynamodb2
+    @mock_aws
     def test_get_handler_all(self):
         client, table = init()
 
